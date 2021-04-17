@@ -1,0 +1,37 @@
+﻿@page
+@model ShoppDJ.Pages.Admin.New.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>News</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.News.Titel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.News.Titel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.News.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.News.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.News.DateTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.News.DateTime)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.News.Id">Edit</a> |
+    <a class="btn btn-block" asp-page="Index">بازگشت به صفحه</a>
+</div>

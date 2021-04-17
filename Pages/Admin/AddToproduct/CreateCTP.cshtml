@@ -1,0 +1,64 @@
+﻿@page
+@model ShoppDJ.Pages.Admin.CategoryToprpduct.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+     
+
+<h4>افزودن به  دسته بندی ها</h4>>
+<hr />
+<div class="row"style="margin-right:10px">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label"> آیدی محصول</label>
+
+                <select asp-for="CategoryToproduct.ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
+            </div>
+            <hr />
+
+
+            <hr />
+            <p> نکته:در صورتی که ایدی محصول را نمیدانید دکمه زیرر را فشار دهید و آیدی محصول را مشاهده کنید</p>
+            <a class="btn btn-secondary" asp-page="Index">مشاهده</a>
+            <hr />
+            <div class="form-group">
+                <h6>قراربگیرد در کدام دسته بندی</h6>
+                <label @*asp-for="CategoryToproduct.CategoryId"*@ class="control-label">کد دسته بندی ها</label>
+                <select asp-for="CategoryToproduct.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="alert alert-danger">
+
+                <p>عدد1 برای دسته محصولات جدید </p>
+                <a asp-page="Index"class="alert-danger">
+                (توجه مهم: برای این دسته باید مشخص کنید در کدام اسلایدر قرار بگیرد.اگر قبلا اسلایدر را انتخاب نکرده ایید بر روی متن کلیک کنید و اسلایدر را حتما انتخاب کنید)</a>
+
+
+                <hr />
+                <p>عدد 2برای دسته محصولات ویژه</p>
+                <hr />
+                <p>عدد3 برای دسته محصولات محبوب</p>
+
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary" />
+            </div>
+        </form>
+
+
+      
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-dark" asp-page="Index">بازگشت به صفحه </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,84 @@
+﻿@page
+@model ShoppDJ.Pages.Admin.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+
+<h4>افزودن محصول </h4>
+<hr />
+<div class="row" style="background-color:lightcyan">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label @*asp-for="Product.Name"*@ class="control-label">نام محصول</label>
+                <input asp-for="Product.Name" class="form-control" placeholder="لطفا نام محصول را وارد نماید" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label @*asp-for="Product.ItemId"*@ class="control-label">کد محصول</label>
+                <input asp-for="Product.ItemId" class="form-control" placeholder="کد مخصوص محصول را وارد نمایید" />
+                <span asp-validation-for="Product.ItemId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label @*asp-for="Product.Description"*@ class="control-label">توضیحات محصول</label>
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label @*asp-for="Product.Price"*@ class="control-label">قیمت محصول</label>
+                <input asp-for="Product.Price" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+
+
+            <div> هشدار:عکس حتما فرمتjpgباشد</div>
+            <div><label @*asp-for="Productse.Picture"*@> عکس</label></div>
+            <div>
+                <input asp-for="Productse.Picture" />
+                <span asp-validation-for="Productse.Picture"></span>
+            </div>
+
+
+            <hr />
+            <hr />
+
+            <div class="form-group alert alert-warning">
+                <p>
+                    نکته مهم: در صورتی که میخواهید این محصول دراسلاید جدید ترین ها قرار بگیرد<br>
+                   یکی از اعداد زیر را وارد نمایید.درغیر اینصورت میتوانید ادامه دهید و از این مورد رد شوید
+                </p>
+
+                <p> برای قرار گیری محصول در اسلاید اول عدد1 و برای اسلاید دوم عدد 2 را وارد نمایید</p>
+               
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Product.Number" class="control-label"></label>
+                <input asp-for="Product.Number" class="form-control" placeholder="عدد مربوط به انتخاب اسلایدر" />
+                <span asp-validation-for="Product.Number" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a  class="btn btn-dark"  asp-page="Index">بازگشت به صفحه اصلی</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

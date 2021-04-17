@@ -1,0 +1,34 @@
+﻿
+@model LoginViewModel
+
+@*<div class="col-xs-12 col-sm-12 col-md-12 text-center">
+
+    @{
+        if (!Model.ExternalLogins.Any())
+        {
+            <div>در حال حاضر امکان ورود با اکانت های دیگر وجود ندارد</div>
+        }
+        else
+        {
+            <form method="post" asp-controller="Account" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                <div class="social">
+                    @foreach (var provider in Model.ExternalLogins)
+                    {
+
+                        <button type="submit"
+                                value="@provider.Name"
+                                class="btn btn-warning   float-right " name="provider"
+                                title="   ورود با استفاده از اکانت گوگل  @provider.DisplayName ">
+                            @provider.DisplayName
+                        </button>
+
+                    }
+                </div>
+            </form>
+        }
+    }
+
+</div>*@
+
+
+<h1>MyNameIsAliMehrabi</h1>

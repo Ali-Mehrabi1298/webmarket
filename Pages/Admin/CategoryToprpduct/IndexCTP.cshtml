@@ -1,0 +1,44 @@
+﻿@page
+@model ShoppDJ.Pages.Admin.CategoryToprpduct.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+      
+<p>
+    <a asp-page="CreateCTP" class="btn btn-secondary">افزودن به دسته بندی ها</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryToproduct[0].product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryToproduct[0].Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CategoryToproduct)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.product.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Id)
+                </td>
+                <td>
+                   
+                        <a class="btn btn-warning"asp-page="EditCTP">ویرایش</a>
+                        <a class="btn btn-danger" asp-page="DeleteCTP">حذف</a>
+                        <a class="btn btn-info" asp-page="DetailsCTP">جزییات</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

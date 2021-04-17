@@ -1,0 +1,22 @@
+﻿
+
+@model News
+   
+<div class="slide" @*style="padding-right: 30px;"*@>
+    <div class="row">
+        <div class="span6">
+            <div class="news-item">
+                <div class="published">@Model.DateTime.DayOfYear</div>
+                <h6>@(Model.Titel)</h6>
+                <p>@(Model.Description)</p>
+            </div>
+        </div>
+        <div class="span6">
+            <div class="news-item">
+                <div class="published">15 بهمن 1392</div>
+                <h6>@(Model.Titel)</h6>
+                <p>@(Model.Description)</p>
+            </div>
+        </div>
+    </div>
+</div> 

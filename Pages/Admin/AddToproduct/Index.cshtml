@@ -1,0 +1,79 @@
+﻿@page
+@model ShoppDJ.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<p>
+    <a asp-page="Create" class="btn btn-info">افزودن محصول</a>
+</p>
+
+<div class="alert-light ">
+
+    <a class="btn btn-info"  asp-page="CreateCTP">افزودن به دسته بندی ها</a>
+
+
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].Id)
+            </th>
+
+            <th>
+             
+                <h5>نام محصول</h5>
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Product[0].Description)*@
+                <h5>توضیحات محصول</h5>
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Product[0].ItemId)*@
+                <h5>کدمحصول</h5>
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Product[0].Price)*@
+               <h5>قیمت محصول</h5>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Product) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemId)
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td style="display: inline-table; padding-right: 90px;">
+                <a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.Id">ویرایش</a>
+                <a class="btn btn-success" asp-page="./Details" asp-route-id="@item.Id">جزییات</a>
+                <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id">حذف</a>
+                <a class="btn btn-info" asp-page="./Ediit2" asp-route-id="@item.Id"> اسلایدربرای دسته بندی </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

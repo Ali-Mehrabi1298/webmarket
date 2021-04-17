@@ -1,0 +1,17 @@
+﻿
+@model IEnumerable<ShowGroupCategory>
+
+
+    
+
+   
+<ul class="dropdown-menu">
+    @foreach (var item in Model)
+    {
+
+        <li class="list-group-item"><a href="/Group/@item.GroupId/@item.Name">@item.Name</a></li>
+   
+    }
+
+</ul>
+  

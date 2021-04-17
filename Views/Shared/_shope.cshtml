@@ -1,0 +1,34 @@
+﻿
+@model Product
+
+<div class="span3 filter--blazers" data-price="1567" data-popularity="2" data-size="xs|s|m|xl" data-color="pink" data-brand="adidas">
+    <div class="product">
+
+        <div class="stamp red">تمام شد</div>
+
+        <div class="product-img">
+            <div class="picture">
+                <img src="images/@(Model.Name).jpg" alt="Webmarket" width="540" height="374" />
+              
+                <div class="img-overlay">
+                    <a asp-controller="Home" asp-action="Detail" asp-route-id="@(Model.Id)" class="btn more btn-primary">توضیحات بیشتر</a>
+                    <a asp-action="AddToCart" asp-controller="Home" asp-route-itemId="@Model.ItemId" class="btn buy btn-danger">اضافه به سبد خرید</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="main-titles no-margin">
+            <h5 class="no-margin isotope--title">@(Model.Name)</h5>
+            <h4 class="title">@(Model.Price) تومان</h4>
+
+        </div>
+        <p class="center-align stars">
+            <span class="icon-star stars-clr"></span>
+            <span class="icon-star stars-clr"></span>
+            <span class="icon-star"></span>
+            <span class="icon-star"></span>
+            <span class="icon-star"></span>
+
+        </p>
+    </div>
+</div>

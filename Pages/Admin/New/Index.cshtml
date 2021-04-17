@@ -1,0 +1,49 @@
+﻿@page
+@model ShoppDJ.Pages.Admin.New.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<p>
+    <a class="btn btn-secondary" asp-page="Create">افزودن خبر</a>
+</p>
+<table class="table bg-light">
+    <thead>
+        <tr>
+            <th>
+                <h6>تیتر</h6>
+            </th>
+            <th>
+                <h6>خبر</h6>
+            </th>
+            <th>
+                <h6>تاریخ وساعت</h6>
+
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.News) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">ویرایش</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">جزییات خبر</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">حذف</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
