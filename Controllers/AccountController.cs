@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ShoppDJ.Data;
 using ShoppDJ.Data.Repository;
 using ShoppDJ.Models;
+using ShoppDJ.Security;
 using ShoppDJ.Security.Providers;
 using ShoppDJ.ViewModels;
 
@@ -25,17 +27,20 @@ namespace BookAudiomak.Controllers
         private readonly Shopingcontex _Shopingcontex;
         private readonly IPhoneTotpProvider _phoneTotpProvider;
 
+        private readonly PhoneTotpOptions _phoneTotpOptions;
 
 
 
         public AccountController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, IMessageSender messageSender, IPhoneTotpProvider phoneTotpProvider, Shopingcontex shopingcontex)
+            SignInManager<ApplicationUser> signInManager, IMessageSender messageSender, 
+            IPhoneTotpProvider phoneTotpProvider, Shopingcontex shopingcontex,IOptions<PhoneTotpOptions> phoneTotpOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _messageSender = messageSender;
             _phoneTotpProvider = phoneTotpProvider;
             _Shopingcontex = shopingcontex;
+            _phoneTotpOptions = phoneTotpOptions?.Value ?? new PhoneTotpOptions();
         }
 
         [HttpGet]
@@ -84,17 +89,25 @@ namespace BookAudiomak.Controllers
 
                     //ModelState.AddModelError("", $"کد وارد شده اشتباه است برای ارسال دوباره کد، لطفا 10 ثانیه صبر کنید .");
 
+                 
+
                     if (TempData.ContainsKey("PTC"))
                     {
                         var totpTempDataModel = JsonSerializer.Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
                         if (totpTempDataModel.ExpirationTime >= DateTime.Now)
                         {
                             var differenceInSeconds = (int)(totpTempDataModel.ExpirationTime - DateTime.Now).TotalSeconds;
-                            ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds} ثانیه صبر کنید.");
+                            ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds}  ثانیه صبر کنید وسپس مجددا تلاش کنید.");
                             TempData.Keep("PTC");
                             return View();
                         }
                     }
+                    TempData["PTC"] = JsonSerializer.Serialize(new PhoneTotpTempDataModel()
+                    {
+                       // SecretKey = secretKey,
+                        PhoneNumber = model.PhoneNumber,
+                        ExpirationTime = DateTime.Now.AddSeconds(_phoneTotpOptions.StepInSeconds)
+                    });
                     return View();
 
                 }
@@ -285,17 +298,7 @@ namespace BookAudiomak.Controllers
             if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
             if (ModelState.IsValid)
             {
-                if (TempData.ContainsKey("PTC"))
-                {
-                    var totpTempDataModel = JsonSerializer.Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
-                    if (totpTempDataModel.ExpirationTime >= DateTime.Now)
-                    {
-                        var differenceInSeconds = (int)(totpTempDataModel.ExpirationTime - DateTime.Now).TotalSeconds;
-                        ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds} ثانیه صبر کنید.");
-                        TempData.Keep("PTC");
-                        return View();
-                    }
-                }
+              
 
                 var secretKey = Guid.NewGuid().ToString();
                 var totpCode = _phoneTotpProvider.GenerateTotp(secretKey);
@@ -307,19 +310,34 @@ namespace BookAudiomak.Controllers
                     //TODO send totpCode to user.
                 }
 
-                TempData["PTC"] = JsonSerializer.Serialize(new PhoneTotpTempDataModel()
-                {
-                    SecretKey = secretKey,
-                    PhoneNumber = model.PhoneNumber,
-                    //ExpirationTime = DateTime.Now.AddSeconds(_phoneTotpOptions.StepInSeconds)
-                });
 
                 //RedirectToAction("VerifyTotpCode");
                 //return Content(totpCode);
+              
                 try
                 {
-                    var dd = _userManager.Users.Single(a => a.PhoneNumber == model.PhoneNumber);
+                    if (TempData.ContainsKey("PTC"))
+                    {
+                        var totpTempDataModel = JsonSerializer.Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+                        if (totpTempDataModel.ExpirationTime >= DateTime.Now)
+                        {
+                            var differenceInSeconds = (int)(totpTempDataModel.ExpirationTime - DateTime.Now).TotalSeconds;
+                            ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds} ثانیه صبر کنید.");
+                            TempData.Keep("PTC");
+                            return View();
+                        }
+                        return View();
+                    }
 
+
+                    TempData["PTC"] = JsonSerializer.Serialize(new PhoneTotpTempDataModel()
+                    {
+                        SecretKey = secretKey,
+                        PhoneNumber = model.PhoneNumber,
+                        ExpirationTime = DateTime.Now.AddSeconds(_phoneTotpOptions.StepInSeconds)
+                    });
+
+                    var dd = _userManager.Users.Single(a => a.PhoneNumber == model.PhoneNumber);
 
 
                     if (model.PhoneNumber == dd.PhoneNumber)
@@ -333,6 +351,8 @@ namespace BookAudiomak.Controllers
                         user.codeconfig = totpCode;
                         await _Shopingcontex.SaveChangesAsync();
                         return RedirectToAction("Register");
+
+
                     }
                 }
                 catch

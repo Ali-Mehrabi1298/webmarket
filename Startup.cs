@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using ShoppDJ.Data;
 using ShoppDJ.Data.Repository;
 using ShoppDJ.Models;
+using ShoppDJ.Security;
 using ShoppDJ.Security.Providers;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,12 @@ namespace ShoppDJ
 
                 );
             #endregion
+
+            services.Configure<PhoneTotpOptions>(options =>
+            {
+                options.StepInSeconds = 30;
+            });
+
             services.AddAuthentication()
                     .AddGoogle(options =>
                     {
