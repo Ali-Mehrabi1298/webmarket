@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShoppDJ.Data;
 using ShoppDJ.Data.Repository;
+using ShoppDJ.Models;
+using ShoppDJ.Security.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,23 +50,26 @@ namespace ShoppDJ
                         options.ClientId = "457993417792-hui925cb3oul7qjonqpm6junjp9in28b.apps.googleusercontent.com";
                         options.ClientSecret = "QA-KOp05nRjW9LA-D-yNODad";
                     });
-
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+                services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                options.Password.RequiredUniqueChars = 0;
+                //options.Password.RequiredUniqueChars = 0;
+                options.SignIn.RequireConfirmedPhoneNumber = true;
+                options.User.RequireUniqueEmail = false;
+               
+                //options.User.AllowedUserNameCharacters =
+                    //"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
 
-                options.User.RequireUniqueEmail = true;
-                options.User.AllowedUserNameCharacters =
-                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
-
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             })
                 .AddEntityFrameworkStores<Shopingcontex>()
                 .AddDefaultTokenProviders();
-                //.AddErrorDescriber<PersianIdentityErrorDescriber>();
-
+            //.AddErrorDescriber<PersianIdentityErrorDescriber>();
+            services.AddScoped<IMessageSender, MessageSender>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPhoneTotpProvider,PhoneTotpProvider>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

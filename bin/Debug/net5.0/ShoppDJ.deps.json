@@ -44,6 +44,7 @@
           "Microsoft.EntityFrameworkCore.Tools": "5.0.4",
           "Microsoft.Extensions.Logging": "5.0.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "5.0.2",
+          "Otp.NET": "1.2.2",
           "SendGrid": "9.22.0",
           "ZarinpalSandbox": "2.0.4",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -1532,6 +1533,17 @@
         },
         "compile": {
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "Otp.NET/1.2.2": {
+        "runtime": {
+          "lib/netstandard2.0/Otp.NET.dll": {
+            "assemblyVersion": "1.2.2.0",
+            "fileVersion": "1.2.2.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Otp.NET.dll": {}
         }
       },
       "Portable.BouncyCastle/1.8.8": {
@@ -5188,6 +5200,13 @@
       "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
       "path": "newtonsoft.json/11.0.2",
       "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
+    },
+    "Otp.NET/1.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2hrZfkbzeWJ3tNXXt/1beg4IY+nS4F3gIfh4NVFvW0f6Pj51hGpiJ4prBz7Dmrr4ZYrA96rTERVGieZ4xYm7jA==",
+      "path": "otp.net/1.2.2",
+      "hashPath": "otp.net.1.2.2.nupkg.sha512"
     },
     "Portable.BouncyCastle/1.8.8": {
       "type": "package",

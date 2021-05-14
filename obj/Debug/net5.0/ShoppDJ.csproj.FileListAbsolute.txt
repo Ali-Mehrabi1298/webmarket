@@ -238,3 +238,5 @@ G:\Users\ALimehrabi\source\repos\ShoppDJ\ShoppDJ\obj\Debug\net5.0\Razor\Pages\Ad
 G:\Users\ALimehrabi\source\repos\ShoppDJ\ShoppDJ\obj\Debug\net5.0\Razor\Pages\Admin\New\Edit.cshtml.g.cs
 G:\Users\ALimehrabi\source\repos\ShoppDJ\ShoppDJ\obj\Debug\net5.0\Razor\Pages\Admin\New\Index.cshtml.g.cs
 G:\Users\ALimehrabi\source\repos\ShoppDJ\ShoppDJ\obj\Debug\net5.0\Razor\Views\Home\OnlinePayment.cshtml.g.cs
+G:\Users\ALimehrabi\source\repos\ShoppDJ\ShoppDJ\bin\Debug\net5.0\Otp.NET.dll
+G:\Users\ALimehrabi\source\repos\ShoppDJ\ShoppDJ\obj\Debug\net5.0\Razor\Views\Account\SendTotpCode.cshtml.g.cs

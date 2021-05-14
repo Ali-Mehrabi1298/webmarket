@@ -1,0 +1,53 @@
+﻿@model ShoppDJ.ViewModels.SendTotpCodeViewModel
+
+@{
+    ViewData["Title"] = "Login by totp code";
+}
+
+
+<div>
+    <form asp-controller="Account" asp-action="SendTotpCode" method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        @if (TempData["SendTotpCodeErrorMessage"] != null)
+        {
+            <div class="text-danger">@TempData["SendTotpCodeErrorMessage"].ToString()</div>
+        }
+
+        <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+
+
+        <label asp-for="Password" class="col-md-2 control-label"> رمز عبور</label>
+        <div class="col-md-4">
+            <input asp-for="Password" class="form-control" placeholder="رمز عبور" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        @*<label asp-for="" class="col-md-2 control-label">رمزعبور</label>
+        <div class="col-md-4">
+            <input asp-for="code" class="form-control" placeholder="رمز عبور باید ترکیبی از حروف واعداد باشد" />
+            <span asp-validation-for="code" class="text-danger"></span>
+        </div>*@
+
+
+
+
+
+
+
+
+
+
+
+        <button type="submit" class="btn btn-primary">ارسال کد</button>
+    </form>
+</div>
+
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

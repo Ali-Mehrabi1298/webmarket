@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ShoppDJ.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace ShoppDJ.Data.Repository
    public interface IUserRepository
     {
 
-        IdentityUser GetUserForLogin(string Email, string password);
+        ApplicationUser GetUserForLogin(string Email, string password);
 
     }
 
@@ -23,9 +24,14 @@ namespace ShoppDJ.Data.Repository
             _shopingcontex = shopingcontex;
         }
 
-        public IdentityUser GetUserForLogin(string Email, string password)
+        public ApplicationUser GetUserForLogin(string Email, string password)
         {
            return _shopingcontex.Users.Single(d=>d.Email==Email &&  d.PasswordHash==password);
         }
+
+
+
+
+
     }
 }

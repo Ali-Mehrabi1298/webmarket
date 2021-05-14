@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShoppDJ.Data
 {
-    public class Shopingcontex : IdentityDbContext
+    public class Shopingcontex : IdentityDbContext<ApplicationUser>
     {
 
 
@@ -23,7 +23,7 @@ namespace ShoppDJ.Data
 
         public DbSet<Product> products { get; set; }
         public DbSet<Category> categories { get; set; }
-    
+     
         public DbSet<CategoryToproduct> CategoryToproducts { get; set; }
         public DbSet<Order> orders { get; set; }
         public DbSet<OrderDetail> orderdetails { get; set; }

@@ -2,25 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ShoppDJ.Data;
+using ShoppDJ.Data.Repository;
 using ShoppDJ.Models;
+using ShoppDJ.Security.Providers;
+using ShoppDJ.ViewModels;
 
 namespace BookAudiomak.Controllers
 {
     public class AccountController : Controller
+    //IdentityUser
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-      
-        public AccountController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager )
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMessageSender _messageSender;
+        private readonly Shopingcontex _Shopingcontex;
+        private readonly IPhoneTotpProvider _phoneTotpProvider;
+
+
+
+
+        public AccountController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager, IMessageSender messageSender, IPhoneTotpProvider phoneTotpProvider, Shopingcontex shopingcontex)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-           
+            _messageSender = messageSender;
+            _phoneTotpProvider = phoneTotpProvider;
+            _Shopingcontex = shopingcontex;
         }
 
         [HttpGet]
@@ -32,91 +47,65 @@ namespace BookAudiomak.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            //var ss = _userManager.Users.Single(a => a.PhoneNumber == model.PhoneNumber);
+
+
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser()
+
+
+                try
                 {
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    
-                };
-
-                //var emailConfirmationToken =
-                //await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //var emailMessage =
-                //    Url.Action("ConfirmEmail", "Account",
-                //        new { username = user.UserName, token = emailConfirmationToken },
-                //        Request.Scheme);
-                //await _emailSender.SendEmailAsync(model.Email, "Email confirmation", emailMessage);
-
-
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
+                    var dd = _userManager.Users.Single(a => a.codeconfig == model.code);
                   
 
-                    return View("SuccessRegister");
+                    {
 
-                    //return RedirectToAction("Index", "Home");
+
+                        var user = await _Shopingcontex.Users.Where(u => u.codeconfig == model.code)
+                          .SingleOrDefaultAsync();
+
+                        user.PhoneNumberConfirmed = true;
+                        user.DateTime = DateTime.Now;
+
+
+                        await _Shopingcontex.SaveChangesAsync();
+
+
+
+                    }
+                    return RedirectToAction("Index", "Home");
+
                 }
-
-                foreach (var error in result.Errors)
+                catch
                 {
-                    ModelState.AddModelError("", error.Description);
+
+
+
+                    //ModelState.AddModelError("", $"کد وارد شده اشتباه است برای ارسال دوباره کد، لطفا 10 ثانیه صبر کنید .");
+
+                    if (TempData.ContainsKey("PTC"))
+                    {
+                        var totpTempDataModel = JsonSerializer.Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+                        if (totpTempDataModel.ExpirationTime >= DateTime.Now)
+                        {
+                            var differenceInSeconds = (int)(totpTempDataModel.ExpirationTime - DateTime.Now).TotalSeconds;
+                            ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds} ثانیه صبر کنید.");
+                            TempData.Keep("PTC");
+                            return View();
+                        }
+                    }
+                    return View();
+
                 }
+
+
 
             }
             return View(model);
 
+
         }
-
-
-
-
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Register(RegisterViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-        //        var result = await _userManager.CreateAsync(user, model.Password);
-        //        if (result.Succeeded)
-        //        {
-        //            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        //            var callbackUrl = Url.Action(
-        //               "ConfirmEmail", "Account",
-        //               new { userId = user.Id, code = code },
-        //               protocol: Request.url.Scheme);
-
-        //            await UserManager.SendEmailAsync(user.Id,
-        //               "Confirm your account",
-        //               "Please confirm your account by clicking this link: <a href=\""
-        //                                               + callbackUrl + "\">link</a>");
-        //            // ViewBag.Link = callbackUrl;   // Used only for initial demo.
-        //            return View("DisplayEmail");
-        //        }
-        //        AddErrors(result);
-        //    }
-
-        //    // If we got this far, something failed, redisplay form
-        //    return View(model);
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         [HttpGet]
@@ -130,7 +119,7 @@ namespace BookAudiomak.Controllers
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
         .ToList()
             };
-         
+
 
             ViewData["returnUrl"] = returnUrl;
             return View(model);
@@ -157,7 +146,7 @@ namespace BookAudiomak.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                 
+
                 if (result.IsLockedOut)
                 {
                     ViewData["ErrorMessage"] = "اکانت شما به دلیل پنج بار ورود ناموفق به مدت پنج دقیقه قفل شده است";
@@ -194,19 +183,7 @@ namespace BookAudiomak.Controllers
             if (user == null) return Json(true);
             return Json("نام کاربری وارد شده از قبل موجود است");
         }
-        [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string userName, string token)
-        {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(token))
-                return NotFound();
-            var user = await _userManager.FindByNameAsync(userName);
-            if (user == null) return NotFound();
-            var result = await _userManager.ConfirmEmailAsync(user, token);
 
-            return Content(result.Succeeded ? "Email Confirmed" : "Email Not Confirmed");
-
-
-        }
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
@@ -256,7 +233,7 @@ namespace BookAudiomak.Controllers
                 if (user == null)
                 {
                     var userName = email.Split('@')[0];
-                    user = new IdentityUser()
+                    user = new ApplicationUser()
                     {
                         UserName = (userName.Length <= 10 ? userName : userName.Substring(0, 10)),
                         Email = email,
@@ -276,5 +253,134 @@ namespace BookAudiomak.Controllers
             ViewBag.ErrorMessage = $"دریافت کرد {externalLoginInfo.LoginProvider} نمیتوان اطلاعاتی از";
             return View();
         }
+
+
+
+
+
+
+
+        [HttpGet]
+        public IActionResult SendTotpCode()
+        {
+            if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
+            if (TempData.ContainsKey("PTC"))
+            {
+                var totpTempDataModel = JsonSerializer.Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+                if (totpTempDataModel.ExpirationTime >= DateTime.Now)
+                {
+                    var differenceInSeconds = (int)(totpTempDataModel.ExpirationTime - DateTime.Now).TotalSeconds;
+                    ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds} ثانیه صبر کنید.");
+                    TempData.Keep("PTC");
+                    return View();
+                }
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendTotpCode(SendTotpCodeViewModel model)
+        {
+            if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                if (TempData.ContainsKey("PTC"))
+                {
+                    var totpTempDataModel = JsonSerializer.Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+                    if (totpTempDataModel.ExpirationTime >= DateTime.Now)
+                    {
+                        var differenceInSeconds = (int)(totpTempDataModel.ExpirationTime - DateTime.Now).TotalSeconds;
+                        ModelState.AddModelError("", $"برای ارسال دوباره کد، لطفا {differenceInSeconds} ثانیه صبر کنید.");
+                        TempData.Keep("PTC");
+                        return View();
+                    }
+                }
+
+                var secretKey = Guid.NewGuid().ToString();
+                var totpCode = _phoneTotpProvider.GenerateTotp(secretKey);
+
+                var userExists = await _userManager.Users
+                    .AnyAsync(user => user.PhoneNumber == model.PhoneNumber);
+                if (userExists)
+                {
+                    //TODO send totpCode to user.
+                }
+
+                TempData["PTC"] = JsonSerializer.Serialize(new PhoneTotpTempDataModel()
+                {
+                    SecretKey = secretKey,
+                    PhoneNumber = model.PhoneNumber,
+                    //ExpirationTime = DateTime.Now.AddSeconds(_phoneTotpOptions.StepInSeconds)
+                });
+
+                //RedirectToAction("VerifyTotpCode");
+                //return Content(totpCode);
+                try
+                {
+                    var dd = _userManager.Users.Single(a => a.PhoneNumber == model.PhoneNumber);
+
+
+
+                    if (model.PhoneNumber == dd.PhoneNumber)
+                    {
+                        var user = await _Shopingcontex.Users.Where(u => u.PhoneNumber == model.PhoneNumber)
+                         .SingleOrDefaultAsync();
+
+                        user.PhoneNumberConfirmed = false;
+                        user.DateTime = DateTime.Now;
+                        user.PasswordHash = model.Password;
+                        user.codeconfig = totpCode;
+                        await _Shopingcontex.SaveChangesAsync();
+                        return RedirectToAction("Register");
+                    }
+                }
+                catch
+                {
+                    var user = new ApplicationUser()
+                    {
+                        UserName = model.PhoneNumber,
+                        PhoneNumber = model.PhoneNumber,
+                        PhoneNumberConfirmed = false,
+                        DateTime = DateTime.Now,
+                        codeconfig = totpCode,
+
+
+                    };
+
+                    var result = await _userManager.CreateAsync(user, model.Password);
+
+                    if (result.Succeeded)
+                    {
+
+                        return RedirectToAction("Register");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+
+                }
+                return View(model);
+
+            }
+
+            return View();
+            ;
+        }
+
+        [HttpGet]
+        public IActionResult VerifyTotpCode()
+        {
+            if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
+
+            return View();
+        }
     }
 }
+
+
+
+
+

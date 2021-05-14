@@ -88,6 +88,10 @@
               "target": "Package",
               "version": "[5.0.2, )"
             },
+            "Otp.NET": {
+              "target": "Package",
+              "version": "[1.2.2, )"
+            },
             "SendGrid": {
               "target": "Package",
               "version": "[9.22.0, )"

@@ -31,7 +31,7 @@ namespace ShoppDJ.Controllers
 
             var News = _shopingcontex.News.ToList();
 
-            //var product = _shopingcontex.products.ToList();
+            var product = _shopingcontex.products.ToList();
 
             //var userId = /*int.Parse*/(User.FindFirstValue(ClaimTypes.NameIdentifier).ToString());
             var order = _shopingcontex.orders.Where(o => o.username == User.Identity.Name && !o.IsFinaly)

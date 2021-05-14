@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JMlqc2NR/pi0LpMarxeU+lAMtl8ZMpbEbjgd4mYGW3T7Ipef8h1Cw48ta9BlCZhxV4Z91MVbt7LeIeCaQ+Xadg==",
+  "dgSpecHash": "Rx9nPUj2FN5cJWLZintKfuV8i0y6IQmRZSRliaNd4ZEMafWDHW+CcYVySWmAnq3sXvTV9MQwPItmg1/laAYQ8w==",
   "success": true,
   "projectFilePath": "G:\\Users\\ALimehrabi\\source\\repos\\ShoppDJ\\ShoppDJ\\ShoppDJ.csproj",
   "expectedPackageFiles": [
@@ -85,6 +85,7 @@
     "C:\\Users\\ALimehrabi\\.nuget\\packages\\mimekit\\2.10.1\\mimekit.2.10.1.nupkg.sha512",
     "C:\\Users\\ALimehrabi\\.nuget\\packages\\netstandard.library\\1.6.0\\netstandard.library.1.6.0.nupkg.sha512",
     "C:\\Users\\ALimehrabi\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\ALimehrabi\\.nuget\\packages\\otp.net\\1.2.2\\otp.net.1.2.2.nupkg.sha512",
     "C:\\Users\\ALimehrabi\\.nuget\\packages\\portable.bouncycastle\\1.8.8\\portable.bouncycastle.1.8.8.nupkg.sha512",
     "C:\\Users\\ALimehrabi\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\ALimehrabi\\.nuget\\packages\\runtime.native.system.io.compression\\4.1.0\\runtime.native.system.io.compression.4.1.0.nupkg.sha512",
